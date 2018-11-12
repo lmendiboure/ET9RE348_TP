@@ -55,7 +55,18 @@ Expliquer gas price !!
 
 Premiere fois generating DAG environ 1 minute !
 
-**7** Bonus : S'il vous reste du temps en fin de TP vous pourrez essayer de créer un cluster local en instanciant un second noeud (autre port et autre dossier) puis en l'ajoutant (commande admin.addPeer), ceci vous permettra de vérifier le fonctionnement : (présenter fonctionnement)
+**7** Ajout d'un second pair/noeud :
+
+présenter fonctionnement
+
+Dans second terminer aller dans dossier peer_2 et :
+
+Lancer 'init_2.sh', principale différence : nouveau dossier de stockage des données mais même fichiers d'init pour que même bloc de CustomGenesis
+
+Lancer 'run_2.sh', différence, toujours dossier + port exposé
+
+Dans terminal 2 : taper admin.nodeInfo pour récuprer les infos concernant le noeud, recopier la valeur de l'enode (ID du noeud) et dans le terminal 1 lancer la commande admin.addPeer(<ENODE 2>), vérifier le fonctionnement avec la commande admin.peers, le pair devrait maintenant s'afficher, ie maintenant réseau local Blockchain
+Maintenant afficher numéro block courant dans T2 (eth.blockNumber) et lancer nouvelle transaction dans noeud 1 pour que minage soit réalisé, après quelques secondes, peut constater affichage  Imported new chain segment, peut afficher à nouveau le numéro de bloc ++ explication ! 
 
 ### Deuxième temps : Smart contracts
 
@@ -152,14 +163,14 @@ Nouvelle idée : fixer un seuil que l'ont veut atteindre pour cela modifier le c
 
 Pour cela on va tout d'abord définir une nouvelle valeur,  ajouter une nouvelle ligne : `uint public objectif;` et l'instancier à 100000000000000000 dans le constructeur mais également ajouter une nouvelle ligne dans la fonction retirer : `assert(this.balance >= objectif)` si l'argent disponible dans l'épargne n'est pas suffisant...PAs de retrait possible
 
-Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
+Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valeur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
 
 
 Suite 2 :
 
 Smart contract ouvert, ainsi avec l'adresse n'importe quel noeud du réseau peut y accéder, de plus avec fonctions en pubic, tout le monde peut y accéder, comme le montre
 
-tirelireInterface.attire(tirelireTx.address).hello() ainsi un être malveillant pourrait aisément dérober le contenu de notre tirelire....
+tirelireInterface.at(tirelireTx.address).hello() ainsi un être malveillant pourrait aisément dérober le contenu de notre tirelire....
 
 Pour cette raison on va mettre en place un peu de sécurité, seul l'émétteur du smart contract sera en mesure de le modifier, pour cela on instancie un nouvel élément 'address owner' à `msg.sender` dans le constructeur, et on ajoute dans la fonction retirer l'assert permettant de vérifier que l'adresse correspond bien à l'adresse du créateur du smart contract
 
