@@ -1,1 +1,1 @@
-geth --datadir "~/.ethereum_example" --password ethereum_pwd.txt account new
+geth --datadir "~/.ethereum_example" --password "./peer1/ethereum_pwd.txt" account new
