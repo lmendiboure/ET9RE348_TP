@@ -23,9 +23,14 @@ elif [[ $uname =~ "Debian" ]]; then
       export GOROOT=/usr/local/go
       export GOPATH=$(pwd)
       export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+      # Build essential, gcc, make 
+
       sudo apt-get install build-essential
+
       /usr/local/go/bin/go get -d github.com/ethereum/go-ethereum
       /usr/local/go/bin/go install github.com/ethereum/go-ethereum/cmd/geth
+
 #      cd ..
 #      sudo rm -r go_install
 
