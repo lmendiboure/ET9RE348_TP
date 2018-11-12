@@ -126,7 +126,7 @@ publishedTirelireAddr = eth.getTransactionReceipt(tirelireTxHash).contractAddres
 tirelireTx.donner({from:eth.accounts[0], value:"50000000000000000"});
 eth.getBalance(tirelireTx.address)
 tirelireTx.retirer({from:eth.accounts[0]});
-tirelireTx.hello()
+ti	tirelireTx.hello()
 ```
 
 /// pending : txpool.status
@@ -180,3 +180,5 @@ Pour cette raison on va mettre en place un peu de sécurité, seul l'émétteur 
 
 Sécurité très imp pour prévenir les accès
 !!!
+
+Nombreux autres types d'applis possibles, comme déjà dit, notamment propriété ou notariat, exemple : https://github.com/toluhi/property-developer
