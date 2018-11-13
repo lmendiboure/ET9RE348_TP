@@ -73,46 +73,41 @@ Vous pourrez constater qu'au premier lancement de ce script et donc au premier *
 **6. Une première transaction**  
 Maintenant que l'environnement de travail est prêt (instanciation des comptes, lancement du minage) nous allons pouvoir effectuer une première transaction. Avant tout, nous allons observer le nombre de blocs actuellement présents dans la chaine grâce à la commande `eth.blockNumber`. On peut également observer le contenu de ce bloc, et retrouver les champs provenant du fichier `genesis.json` grâce à la commande `eth.getBlock(<numero_de_bloc>)`.
 
-Une fois ceci réalisé, on peut réaliser une premier transaction grâce à la commande `eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:5000000000})` qui contient trois infomations : l'émetteur (premier utilisateur créé), le récepteur (second utilisateur créé) ainsi que la valeur de la transaction. Afin que cette commande soit possible, il sera très certainement nécessaire d'indiquer mot de passe de l'émetteur, ce qui permettra de l'authentifier et de rendre possible la transaction : `personal.unlockAccount(eth.accounts[0], "pa55w0rd123")`. Ceci montre que sans la clé privée d'un utilisateur, il sera impossible d'interagir avec la blockchain en utilisant simplement son adresse.
+Une fois ceci réalisé, on peut réaliser une premier transaction grâce à la commande `eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:5000000000})` qui contient trois informations : l'émetteur (premier utilisateur créé), le récepteur (second utilisateur créé) ainsi que la valeur de la transaction. Afin que cette commande soit possible, il sera très certainement nécessaire d'indiquer le mot de passe de l'émetteur, ce qui permettra de l'authentifier et de rendre possible la transaction : `personal.unlockAccount(eth.accounts[0], "pa55w0rd123")`. Ceci montre que sans la clé privée d'un utilisateur, il sera impossible d'interagir avec la blockchain en utilisant simplement son adresse.
 
-Note pour vérifier infos de la transaction en utilisant le *fullhash* généré : ` eth.getTransaction(<fullhash>)`, on peut également voir que cette transaction apparait maintenant dans le bloc en attente de minage : `eth.getBlock("pending")`
+On peut constater qu'après cette première transaction le mineur s'est mis en mouvement, en effet celui ci va miner cette transaction dans un nouveau bloc qu'il va ajouter à la blockchain. Une fois ceci effectué, on peut vérifier trois choses : que la transaction a bien été effectuée en regardant à la fois le compte de l'émetteur, du récepteur mais également celui du mineur (user 3). On peut également observer qu'un nouveau bloc a été ajouter en regardant la longueur de la blockchain `eth.blockNumber` mais également en regardant le contenu de ce dernier bloc `eth.getBlock(<NOMBRE>)` (il devrait bien entendu contenir la transaction que nous venons d'effectuer).
 
-Vérifir que nouveau bloc : eth.getBlock(1) + voir infos du bloc, montrer que pointe bien surr celui d'avant
+Note : Maintenant que nous avons miné notre premier bloc, en regardant les informations de ce bloc, on peut observer quels sont les composants essentiels d'un bloc, nécessaires à son fonctionnement : timestamp, hash, hash du bloc précédents, transactions, etc.
 
-Expliquer gas price !!
+**7. Ajout d'un second pair/noeud**  
+On va maintenant chercher à agrandir notre réseau privé en créant un nouveau pair, c'est à dire un nouveau noeud s'ajoutant à celui déjà en fonctionnement. Pour cela il va falloir commencer par lancer le script `./peer2/init.sh`. En ouvrant ce script vous pourrez constater que la commande utilisée est quasiment la même que pour le premier noeud. En effet pour que nous puissions ajouter ce second noeud à notre réeau privée il est nécessaire que son bloc de génèse et sa configuration soient les mêmes que ceux du premier noeud. La seule différence entre ces deux scripts de lancement est le dossie de destination dans lequel nous souhaitons stocker les informations relatives à ce noeud (chaque dossier correspondant à un noeud).
+On va maintenant pouvoir lancer ce second noeud grâce à la commande `./peer2/run.sh` qui indique simplement un port différent de celui du pair  (ainsi que toujours un dossier de stockage différent).  
+Ce pair lancé, on va vouloir récupérer ses informations pour pouvoir les transmettre au pair 1. Pour cela il suffit de lancer la commande `admin.nodeInfo`. Ce qui nous intéresse ici est la valeur de l'inode de ce noeud qui permet de l'identifier de façon unique. On va donc copier cette valeur et en retournant dans le terminal du noeud 1 taper la commande : `admin.addPeer(<ENODE 2>)`. Si l'ensemble du processus a fonctionné, on devrait donc avoir maintenant deux neouds appareillés au sein de notre blockchain. Pour le vérifier on peut utiliser la commande `admin.peers`, l'identifiant du pair 2 devrait s'afficher.
+Maintenant retournez dans le terminal 2 et affichez le numéro du bloc courant (ie dernier bloc présent dans la blockchain) grâce  à la commande `eth.blockNumber`. Après cela, dans le terminal 1, effectuez une nouvelle transaction de l'utilisateur 1 vers l'utilisateur 2 : `eth.sendTransaction(...)`.
+Retournez à nouveau dans le terminal 2 et affichez à nouveau la valeur du bloc courant ? Comment l'expliquez vous ?  
 
+Note : Comme cela a été dit dans le cours, la blockchain la plus longue est celle sur laquelle le plus de mineur ont travaillé et par conséquent la blockchain la plus récente et la plus sure. Pour cette raison lorsqu'un noeud est confronté à une blockchain plus longue que la sienne, il va la télécharger en remplacement de la sienne.
 
-Regarder block minés + vérifier comptes des users et du miner !
-
-
-**7** Ajout d'un second pair/noeud :
-
-présenter fonctionnement
-
-Dans second terminer aller dans dossier peer_2 et :
-
-Lancer `./peer2/init.sh`, principale différence : nouveau dossier de stockage des données mais même fichiers d'init pour que même bloc de CustomGenesis
-
-Lancer  `./peer2/run.sh`, différence, toujours dossier + port exposé
-
-Dans terminal 2 : taper `admin.nodeInfo` pour récuprer les infos concernant le noeud, recopier la valeur de l'enode (ID du noeud) et dans le terminal 1 lancer la commande `admin.addPeer(<ENODE 2>)`, vérifier le fonctionnement avec la commande admin.peers, le pair devrait maintenant s'afficher, ie maintenant réseau local Blockchain
-Maintenant afficher numéro block courant dans T2 (eth.blockNumber) et lancer nouvelle transaction dans noeud 1 pour que minage soit réalisé, après quelques secondes, peut constater affichage  Imported new chain segment, peut afficher à nouveau le numéro de bloc ++ explication !
+A la fin de cette partie nous devriez être en capacité, de créer une nouvelle blockchain privée composée de plusieurs noeuds, d'y créer des utilisateurs, d'intéragir avec ces utilisateurs, de lancer un mineur et d'effectuer des transactions.
 
 ### Deuxième temps : Smart contracts
-
+_________
 
 On va maintenant essayer de mettre en place un smart afin d'en comprendre le fonctionnement.
 
-Avec Ethereum ceci est possible grâce à Solidity, un langage haut niveau conçu pour l'implémentation de contrats
+Avec Ethereum ceci est possible grâce à Solidity, un langage haut niveau conçu pour l'implémentation de contrats. Afin de gagner du temps nous allons partir d'un code existant que nous allons essayer de comprendre et d'améliorer.
 
-Ouvrir fichier tirelire dans smart_contract
-Contrat à compiler `tirelire.sol`, tirelire géante dans laquelle tous les users peuvent mettre de l'argent, smart contract = fonctions + paramtres comme on va le voir dans cette partie
+Vous pouvez regarder le code de ce contrat contenu dans le fichier `/smart_contract/tirelire.sol`. Ce contrat correspond à une tirelire dans laquelle il est possible de mettre de l'argent (fonction *donner*), d'en retirer de l'argent (*retier*) et d'afficher un message (*hello*). Un contrat est donc constitué de différents éléments, des éléments nécessaires (constructeurs et fonctions) et d'autres éléments qui peuvent s'avérer utiles (variables). Une fois le contrat instancié, les fonctions et variables seront pour l'utilisateur le seul moyen d'intéragir avec le contrat.
 
-première étape :  compilation et génération de diférents fichiers : bin (contract compilé, ce qui va être placé dans la blockcahin), abi : Application Binary Interface, façon d'interagir avec le contenu hexxadécimal de dans un format lisible par un être humain `tirelire.bin`
+**1. Un premier contrat**
 
-Grâce aux lignes suivantes, après avoir lancé `solc --abi --bin tirelire.sol` dans un autre terminal dans la console geth on va pouvoir instancier le contrat :
+Pour commencer, on va simplement essayer de compiler et de déployer le code actuel du fichier `tirelire.sol`. Pour cela dans un premier temps nous allons compilé ce fichier au travers de la génération de deux fichiers primordiaux : un fichier *bin* qui correspond au contrat compilé et donc au code qui va être placé dans la blockchain et un fichier *ABI* (Application Binary Interface), qui va nous permettre d'intéragir dans un format compréhensible avec le contenu hexadécimal du fichier *bin*.
 
-Note : si vous utilisez Debian, solc n'est pas installé, une solution pour pouvoir tout de même l'utiliser est de passer par `https://remix.ethereum.org/` après être accédé à cette page dans un navigateur, collez le code du fichier `tirelire.sol` à la place du code présent sur l'interface. Cliquez ensuite sur *Start to compile* une fois que c'est réalisé, cliquez une *Details*, il va maintenant vous être possible de récupérer l'ABI et le code bin. Note, ce qui nous intéresse dans le code bin est uniquement le champ `object`, veuillez à ne pas copier l'ensemble de l'objet!
+Pour cette compilation, deux solutions s'offrent à vous :
+- si vous êtes sous Ubuntu, utilisez (dans un troisième terminal !) la commande `solc --abi --bin tirelire.sol`;
+- si vous êtes sous Debian, le compilateur Solidity n'est pas installé sur votre machine eet par conséquent il va vous être nécessaire d'utiliser votre navigateur Web pour accéder à la page `https://chriseth.github.io/browser-solidity/#version=soljson-latest.js`, il s'agit d'un compilateur en ligne temps réel de solidity. Après être accédé à cette page dans un navigateur, collez le contenu du fichier `tirelire.sol` à la place du code présent sur l'interface. Celui ci devait être automatique compilé et il va maintenant vous être possible de récupérer l'ABI et le code bin générées sous les noms de variables `Bytecode` et `Interface`.
+
+Une fois ces deux fichiers générés, on va pouvooir passer au déploiement du contrat grâce aux lignes de commandes suivantes (dans le terminal du noeud 1 !) :
 
 ```console
 
@@ -124,11 +119,11 @@ tirelireBin = '0x' + "[<BIN provenant du terminal 2 !>]"
 
 tirelireAbi = [<abi provenant du terminal 2 !>]
 
-// Signifier à Geth que cette variable est un ABI : tranformer en ABI le JSON
+// Signifie à Geth que cette variable est un ABI : tranformer en ABI le JSON
 
 tirelireInterface = eth.contract(tirelireAbi)
 
-//On débloque l'utilisateur
+//On débloque l'utilisateur pour pouvoir publier le smart contract
 
 personal.unlockAccount(eth.accounts[0], "pa55w0rd123")
 
@@ -140,26 +135,23 @@ var tirelireTx = tirelireInterface.new({from: eth.accounts[0],data: tirelireBin,
 
 tirelireTxHash = tirelireTx.transactionHash
 
-// On vérifie que l'opération a fonctionné : le reçu d'un contrat est nul jusqu'à ce que celui soit miné
-
-eth.getTransactionReceipt(tirelireTxHash)
-
 // Pour finir, on récupère l'adresse du contrat
 
 publishedTirelireAddr = eth.getTransactionReceipt(tirelireTxHash).contractAddress
 
+// il s'agit là de deux informations qui pourront nous être utiles par la suite
+
 ```
 
-```console
-tirelireTx.donner({from:eth.accounts[0], value:"50000000000000000"});
-eth.getBalance(tirelireTx.address)
-tirelireTx.retirer({from:eth.accounts[0]});
-ti	tirelireTx.hello()
-```
+Maintenant que vous avez réalisé ces différentes commandes, le contrat devrait avoir été miné et il devrait être possible de l'utiliser ! Pour le vérifier, on va essayer d'utiliser les différentes fonctions définies dans le fichier `tirelire.sol`. On va donc commencer par mettre de l'argent dans notre tirelire avec la commande `tirelireTx.donner({from:eth.accounts[0], value:"50000000000000000"})`. Pour vérifier que cela a fonctionner, on peut regarder le solde actuel de cette tirelire avec la commande `eth.getBalance(tirelireTx.address)`. On peut maintenant à nouveau allouer cet argent à l'utilisateur avec la commande `tirelireTx.retirer({from:eth.accounts[0]})`. Enfin il est également possible d'afficher un message de présentation à l'écran avec la classique fonction `tirelireTx.hello()`.
 
-/// pending : txpool.status
 
-Pour tester sur le second noeud on va avoir besoin de trois choses : à nouveau récupérer l'abi du contrat, le convertir en contrat et pour finir de l'adresse du contrat, dans le terminal 2:
+Note : Vous pouvez constater qu'au moment de la publication du smart contract, on a indiqué un attribut nommé *gas*. Le Gas est une unité de mesure correspondant aux ressources en calcul nécessaire à l'accomplissement d'une tâche et en l’occurrence ici au ressources en calcul nécessaire à la réalisation d'une transaction, à l'instanciation d'un smart contract ou à l’interaction avec ce smart contract. Bien évidemment certaines transactions sont bien plus simples que d'autres et par conséquent le calcul nécessaire à leur mise en place est bien plus léger. Un mineur consacrant son temps, son électricité et ses capacités de calcul à l'exécution de code pour la résolution d'une preuve et la mise en place d'une transaction doit être rétribué et c'est le *Gas* qui permet de déterminer à quelle hauteur celui ci doit l'être. Le Gas est donc la capacité de calcul nécessaire à l'exécution d'un smart contract ou d'une transaction. Plus la demande est complexe, plus le coût est élevé, il est donc possible de définir une *Gas limit*, il s'agit de la quantité de Gas maximale que l'on est prêt à dépenser dans une transaction/un contrat. En effet, en cas d'erreur dans le code ou de bug, la capacité de calcul pourrait être infinie et la définition d'une limite permet de se prémunir contre ce genre de problèmes. Si la limite est atteinte, la transaction est interrompue et annulée.  Un complément d'information intéressant sur ce sujet est visible ici ( https://masterthecrypto.com/ethereum-what-is-gas-gas-limit-gas-price/)
+
+
+Pour tester le fonctionnement de ce smart contract sur le second noeud on va avoir besoin de deux choses :
+- récupérer l'abi du contrat (toujours sur le troisième terminal ou le navigateur) et le convertir en contrat;
+- récupérer l'adresse du contrat.
 
 ```console
 tirelireAbi = [<abi provenant du terminal 2 !>]
@@ -167,46 +159,62 @@ tirelireInterface = eth.contract(tirelireAbi)
 tirelireTx.at(<adresse du smart contract>).hello()
 ```
 
-Comme on peut le constater, un contrat est défini par deux choses : sont abi (liste d'intéractions possibles) et son adresse et avec cela il est possible d'y accéder depuis n'importe quel endroit dans le réseau
+Comme on peut le constater, un contrat est défini par deux choses : sont abi (liste d’interactions possibles) et son adresse et avec cela il est possible d'y accéder depuis n'importe quel endroit dans le réseau.
 
-On peut également constater qu'un smart contract peut également contenir de l'argent et par conséquent que son adresse correspond aussi à une adresse
+On peut également constater qu'un smart contract peut (tout comme le compute d'un utilisateur) contenir de l'argent.
 
-Enfin comme tout type de transaction, l'instanciation et l'interaction avec le smart contract coute de l'argent.
+Enfin comme tout type de transaction, l'instanciation et l'interaction avec le smart contract coûte de l'argent.
 
-SUITE : Modification du contrat
+**2. Définition de variables**
 
-Copiez le fichier `tirelire.sol` dans un nouveau fichier `tirelire_2.sol` sur lequel vous travaillerez jusqu'à la fin de ce tp.
+On va maintenant essayer de pousser un peu plus loin le fonctionnement de notre smart contract en y ajoutant des variables.
 
-créer une nouvelle variable `uint public nbAcces`, l'instancier à `0` dans le constructeur et l'incrémenter dans la fonction `donner` et la fonction `retirer` pour enregistrer à chaque fois que quelqu'un accède à la tirelire pour y ajouter ou en retirer de l'argent.
+Pour cela, commencez par copiez le fichier `tirelire.sol` dans un nouveau fichier `tirelire_2.sol` sur lequel vous travaillerez jusqu'à la fin de ce tp (afin de garder une base valide du fichier).
 
-Répétez les étapes de la question précédente avec le fichier `tirelire_2.sol` pour que votre nouveau smart contract soit ajouté à la blockchain et utilisable
+Maintenant, ouvrez le fichier et créez y une nouvelle variable `uint public nbAcces` que vous instancierez à `0` dans le constructeur. Cette fonction va nous permettre de savoir combien de fois on a mis de l'argent dans notre tirelire, il va donc falloir l'incrémenter à chaque appel de la fonction `donner`.
 
-Conclusions :
+Une fois ces trois étapes passées (définition, instanciation et incrémentation), il va falloir répéter les étapes de la question précédente avec le fichier `tirelire_2.sol` pour pouvoir le mettre en place dans la blockchain.
 
-On peut donc conclure qu'un smart contract permet l'instanciation de variables dont la valeur sera stockée dans la blockchain et ces variables ne pourront être modifier que par l'appels de fonctions/du constructeur du smart contract.
-
-
-SUITE 2
+Une fois le fichier mis en place (abi, bin, contrat), vérifiez que les modifications que vous venez d'effectuer fonctionnent bien. Pour cela, vérifiez tout d'abord la valeur de la variable `uint public nbAcces`, puis déposez de l'argent dans votre tirelire et affichez à nouveau la valeur de *nbAcces*, celle-ci devait avoir été incrémentée.
 
 
-Nouvelle idée : fixer un seuil que l'ont veut atteindre pour cela modifier le contrat
+Cette partie doit vous permettre de constater qu'un smart contract perrmet l'instanciation de variables donc la valeur sera stockées dans la blockchain. Ces variables pourront être affichées mais également modifiées par l'appel de fonctions et de constructeurs du smart contract.
 
-Pour cela on va tout d'abord définir une nouvelle valeur,  ajouter une nouvelle ligne : `uint public objectif;` et l'instancier à 100000000000000000 dans le constructeur mais également ajouter une nouvelle ligne dans la fonction retirer : `assert(this.balance >= objectif)` si l'argent disponible dans l'épargne n'est pas suffisant...PAs de retrait possible
+**3. Mise en place de conditions**
 
-Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valeur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
+On va maintenant fixer une nouvelle valeur, qui va correspondre au but que l'on veut atteindre, au nombre d'ethers que l'on veut avoir stocké dans notre tirelire avant de pouvoir en retirer de l'argent.
+
+Pour cela, toujours dans le même fichier, on va tout d'abord définir une nouvelle valeur : `uint public objectif;` que l'on va instancier à `100000000000000000` dans le constructeur. Une fois ceci réaliser, on va ajouter une nouvelle ligne dans la fonction *retirer* : `assert(this.balance >= objectif)`. Ceci signifie que si la somme présente dans notre épargne n'est pas supérieure égale à notre objectif, il sera impossible de retirer de l'argent.
+
+Après avoir à nouveau compilé et ajouté ce contrat à la blockchain, vérifiez que ce que l'on vient de mettre en place fonctionne :
+- effectuez un premier virement sur la tirelire `tirelireTx.donner({from:eth.accounts[0], value:"50000000000000000"})` et affichez le solde de celle ci;
+- essayez de retirer de l'argent de la blockchain, et affichez son solde, que constatez vous ?
+- effectuez un second virement de la même valeur, et essayez à nouveau de retirer l'argent présent dans la tirelire, que se passe t il cette fois ci ?
+
+La définition de cette variable et de cette condition nous permet de constater que si les conditions d'un accord (quel quelles soient) ne sont pas remplies, celui ci n'ira pas jusqu'à son terme. En l'occurence ici, si l'argent n'est pas suffisant, on ne pourra pas en retirer.
+
+Cette partie montre également qu'une fois une variable définie si aucune fonction ne permet de la modifier, il sera impossible d'interagir avec elle, pour par exemple dans notre cas la dimunier. Cette valeur est donc fixée de façon définitive, et cette condition sera toujours vraie et nécessaire.
+
+La seule solution pour modifier cette valeur reviendrait à créer un nouveau smart contract avec une valeur de départ différente, toutefois ceci n'est qu'une fausse solution, en effet, l'argent mis sur notre première tirelire serait perdu...
+
+**4. Sécurisation**
 
 
-Suite 2 :
+Après avoir versé de l'argent à un des autres users du noeud 1 ou 2, par exemple : `eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:50000000000000000})` (sans argent, ce user ne pourra pas payer le mineur et par conséquent pas agir sur le contrat !), déposez de l'argent sur le contrat avec le user 1 (*eth.accounts[0]*) `tirelireTx.donner({from:eth.accounts[0], value:"100000000000000000"})` et essayez de vider le contenu du smart contract avec l'adresse de l'utilisateur vers lequel vous avez effectué la première transaction : `tirelireTx.retirer({from:eth.accounts[1]})` (une authentification sera peut être nécessaire). Quelle somme d'argent contient maintenant notre tirelire ?
 
-Smart contract ouvert, ainsi avec l'adresse n'importe quel noeud du réseau peut y accéder, de plus avec fonctions en pubic, tout le monde peut y accéder, comme le montre
+Comme vous devriez pouvoir le constater, un smart contract est ouvert et quiconque possède l'adresse de ce contrat peut y accéder. Ainsi, tout utilisateur pourra interagir avec les fonctions publiques de notre contrat, et comme c'est le cas ici, il pourra donc être facile pour un être malveillant de dérober le contenu de notre tirelire...
 
-après avoir versé de l'argent à un des autres users du noeud 1 ou 2 : `eth.sendTransaction({from:eth.accounts[0], to:"0xe80493e84125f72fddda65d041b4681e797ed3f5", value:50000000000000000})` (sans argent il ne pourra pas payer le miner et par conséquent pas effectuer de transaction), avec ce user, videz le contenu du smart contract `tirelireTx.retirer({from:"ADDRESS"})`
+Pour cette raison on va mettre en place un peu de sécurité, seul l'émetteur du smart contract sera en mesure de le modifier, pour cela on crée et instancie un nouvel élément `address owner` à `msg.sender` dans le constructeur, et on ajoute dans la fonction `retirer` l'assert permettant de vérifier que l'adresse correspond bien à l'adresse du créateur du smart contract.
 
- ainsi un être malveillant pourrait aisément dérober le contenu de notre tirelire....
+Une fois le contrat déployé, déposez à nouveau de l'argent dans notre tirelire : `tirelireTx.donner({from:eth.accounts[0], value:"100000000000000000"})` puis essayez d'y accéder avec un autre utilisateur, que constatez vous ?
 
-Pour cette raison on va mettre en place un peu de sécurité, seul l'émétteur du smart contract sera en mesure de le modifier, pour cela on instancie un nouvel élément 'address owner' à `msg.sender` dans le constructeur, et on ajoute dans la fonction retirer l'assert permettant de vérifier que l'adresse correspond bien à l'adresse du créateur du smart contract
+Cette partie visait à montrer une chose évidente, la sécurité est un point primordial et contrôler les droits d'accès à nos smart contracts est un point essentiel.
 
-Sécurité très imp pour prévenir les accès
-!!!
+### Pour aller plus loin
+______
 
-Nombreux autres types d'applis possibles, comme déjà dit, notamment propriété ou notariat, exemple : https://github.com/toluhi/property-developer
+Si vous avez finies les parties précédentes qui correspondent à une rapide introduction du fonctionnement d'Ethereum et de son implémentation Go (Geth) nous vous proposons deux améliorations possibles pour aller plus loin et découvrir de nouvelles fonctionnalités :
+
+- Mise en pratique d'autres applications de Smart contract et plus particulièrement d'une gestion d'un processus d'élection transparent et sécurisé grâce au tutoriel suivant : https://solidity.readthedocs.io/en/latest/solidity-by-example.html?fbclid=IwAR1TvfUhoadmSGrg0DECsDZvsyJa3rOcxfsJLObJV0SCryiETg3fxpsD1gg#possible-improvements. Pour cela, vous aurez simplement à copier le code présent sur cette page, à le compiler et à le mettre en place sur la blockchain comme dans la partie précédente.
+
+- Interconnexion de multiples machines pour étendre les capacités de votre réseau, pour ceci vous aurez besoin de différentes idées déjà abordées dans ce TP : utilisation d'un même fichier de génèse au moment de l'*init* et ajout de pair par l'administrateur `admin.addPeer("enode://address@ip:port")`, où *ip* et *port* correspondent aux informations provenant de la machine que l'on cherche à connecter.
