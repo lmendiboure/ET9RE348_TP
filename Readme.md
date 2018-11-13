@@ -21,9 +21,13 @@ https://medium.com/taipei-ethereum-meetup/beginners-guide-to-ethereum-3-explain-
 
 // explication contenu + ce que bloc de génèse
 
+<<<<<<< HEAD
+**3** Lancement : `init.sh` + `run.sh` +vérifier user bien créé : `eth.accounts` + vérifier solde : eth.getBalance(eth.accounts[0])
 
+**4** Créer second compte `personal.newAccount()` avec mdp  de votre choix + vérifier fonctionnement avec `eth.accounts` mais également le solde de ce second user, que vaut il ?
+=======
 **3** Lancement : `./peer1/init.sh` + `./peer1/run.sh` +vérifier user bien créé : `eth.accounts` + vérifier solde : `eth.getBalance(eth.accounts[0])`
-
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 **4** Créer second compte `personal.newAccount()` avec mdp  de votre choix + vérifier fonctionnement avec `eth.accounts` mais également le solde de ce second user, que vaut il ?
 
@@ -43,14 +47,20 @@ troisième user: `personal.newAccount("")` (mdp ="") :
 
 Vérifier balance à 0, vérfier que bien ad miner : `eth.coinbase`
 
-
+<<<<<<< HEAD
+par défaut, geth mine blocks même si pas de transactions, pour miner un sul bloc loadScript("mineWhenNeeded.js")
+=======
 par défaut, geth mine blocks même si pas de transactions, pour miner un sul bloc `loadScript("./js_scripts/mineWhenNeeded.js")`
-
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 Vérifir que nouveau bloc : eth.getBlock(1) + voir infos du bloc, montrer que pointe bien surr celui d'avant
 
 
 Regarder block minés + vérifier comptes des users et du miner !
+<<<<<<< HEAD
+
+Expliquer gas price !!
+=======
 
 Expliquer gas price !!
 
@@ -70,7 +80,7 @@ Dans second terminer aller dans dossier peer_2 et :
 Lancer `./peer2/init.sh`, principale différence : nouveau dossier de stockage des données mais même fichiers d'init pour que même bloc de CustomGenesis
 
 Lancer  `./peer2/run.sh`, différence, toujours dossier + port exposé
-
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 Dans terminal 2 : taper `admin.nodeInfo` pour récuprer les infos concernant le noeud, recopier la valeur de l'enode (ID du noeud) et dans le terminal 1 lancer la commande `admin.addPeer(<ENODE 2>)`, vérifier le fonctionnement avec la commande admin.peers, le pair devrait maintenant s'afficher, ie maintenant réseau local Blockchain
 Maintenant afficher numéro block courant dans T2 (eth.blockNumber) et lancer nouvelle transaction dans noeud 1 pour que minage soit réalisé, après quelques secondes, peut constater affichage  Imported new chain segment, peut afficher à nouveau le numéro de bloc ++ explication !
@@ -82,17 +92,21 @@ On va maintenant essayer de mettre en place un smart afin d'en comprendre le fon
 
 Avec Ethereum ceci est possible grâce à Solidity, un langage haut niveau conçu pour l'implémentation de contrats
 
-
+<<<<<<< HEAD
+Ouvrir fichier tirelire
+=======
 Ouvrir fichier tirelire dans smart_contract
-
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 Contrat à compiler `tirelire.sol`, tirelire géante dans laquelle tous les users peuvent mettre de l'argent, smart contract = fonctions + paramtres comme on va le voir dans cette partie
 
 première étape :  compilation et génération de diférents fichiers : bin (contract compilé, ce qui va être placé dans la blockcahin), abi : Application Binary Interface, façon d'interagir avec le contenu hexxadécimal de dans un format lisible par un être humain `tirelire.bin`
 
 Grâce aux lignes suivantes, après avoir lancé `solc --abi --bin tirelire.sol` dans un autre terminal dans la console geth on va pouvoir instancier le contrat :
-
+<<<<<<< HEAD
+=======
 
 Note : si vous utilisez Debian, solc n'est pas installé, une solution pour pouvoir tout de même l'utiliser est de passer par `https://remix.ethereum.org/` après être accédé à cette page dans un navigateur, collez le code du fichier `tirelire.sol` à la place du code présent sur l'interface. Cliquez ensuite sur *Start to compile* une fois que c'est réalisé, cliquez une *Details*, il va maintenant vous être possible de récupérer l'ABI et le code bin. Note, ce qui nous intéresse dans le code bin est uniquement le champ `object`, veuillez à ne pas copier l'ensemble de l'objet!
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 ```console
 
@@ -110,11 +124,19 @@ tirelireInterface = eth.contract(tirelireAbi)
 
 //On débloque l'utilisateur
 
-
-personal.unlockAccount(eth.accounts[0], "pa55w0rd123")
+<<<<<<< HEAD
+>personal.unlockAccount(eth.accounts[0], "pa55w0rd123")
 
 // On publie le smart contract
 
+>var tirelireTx = tirelireInterface.new({from: eth.accounts[0],data: tirelireBin,gas: 1000000})
+
+// On récupère le hash
+=======
+personal.unlockAccount(eth.accounts[0], "pa55w0rd123")
+
+// On publie le smart contract
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 var tirelireTx = tirelireInterface.new({from: eth.accounts[0],data: tirelireBin,gas: 1000000})
 
@@ -175,7 +197,11 @@ Nouvelle idée : fixer un seuil que l'ont veut atteindre pour cela modifier le c
 
 Pour cela on va tout d'abord définir une nouvelle valeur,  ajouter une nouvelle ligne : `uint public objectif;` et l'instancier à 100000000000000000 dans le constructeur mais également ajouter une nouvelle ligne dans la fonction retirer : `assert(this.balance >= objectif)` si l'argent disponible dans l'épargne n'est pas suffisant...PAs de retrait possible
 
-
+<<<<<<< HEAD
+Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
+=======
+Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valeur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
+>>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 
 Suite 2 :
@@ -190,7 +216,8 @@ Pour cette raison on va mettre en place un peu de sécurité, seul l'émétteur 
 
 Sécurité très imp pour prévenir les accès
 !!!
-
+<<<<<<< HEAD
+=======
 
 Nombreux autres types d'applis possibles, comme déjà dit, notamment propriété ou notariat, exemple : https://github.com/toluhi/property-developer
 >>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
