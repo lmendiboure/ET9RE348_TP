@@ -1,13 +1,27 @@
 ## Initiation à la blockchain au travers d'une crypto-monnaie (Ether) : Découverte d'Ethereum
 -------------
 
+Pour cette mise en pratique, nous allons utilser Geth (Go Ethereum), l'implémentation Go d'Ethereum (https://geth.ethereum.org/). D'autres implémentations d'Ethereum existent mais présentent certains désavantages : l'implémentation C++ est difficile à prendre en main et l'implémentation Python ne possède actuellement pas de version stable.
+
+L'autre outil important ici est le compiler solidity (https://solidity.readthedocs.io/en/v0.4.21/), solc. Celui ci va nous permettre de compiler les fichiers Solidity utilisés pour l'implémentation de smart contracts avec Ethereum.
+
+Pour ce qui est de l'installation de ces outils (Go, Geth et solc), celle ci pourra aisément être réalisée grâce au script `./install.sh`. S'ils ne sont pas installés sur cette machine, lancez donc ce script et vous devriez vous retrouver avec un environnement fonctionnel.  
+
+Ici, nous allons utiliser un environnement de test, et par conséquent une blockchain privée dans laquelle nous pourrons créer des utilisateurs, attribuer des ethers, réaliser des transactions, développer et tester des smart contracts de façon gratuite et rapide.
+
 ### Premiers pas : Création d'un compte et premières transactions
+______
 
-**1.** Créer un compte en lançant le script `./peer1/create_account.sh`
+**1. Création d'un utilisateur**  
+Pour pouvoir intéragir avec Ethereum, l'utilisation d'un compte Ethereum est essentielle. Celui ci possède un solde (un nombre d'ethers, *ether balance*), permet l'envoi de transactions, qu'il s'agisse de transactions monétaires ou de smarts contracts et enfin est contrôlé par une clé privée qui permet de le sécuriser.
+ Il va ici être facile d'en créer un en lançant le script `./peer1/create_account.sh`.
 
-//Explication de ce que compte
+ Ceci en faisant appel à la commande *geth* va simplement demander la création d'un nouvel utilisateur ayant pour mot de passe le mot de passe stocké dans le fichier */peer1/ethereum_pwd.txt*. Une fois cet utilisateur créé une adresse va être générée, celle ci correspond à l'identifiant unique de notre utilisateur, stocké dans la blockchain et et qui permettra de l'authentifier lorsqu'il cherchera à intéragir avec la blockchain mais également d'identifier toutes les transactions qu'il aura réalisé (permettant par exemple de connaitre son solde à un moment donné).
 
-**2.** On va maintenant allouer une certaine somme d'Ether, *1000000000000000000000* à cet utilisateur, pour cela ouvrez le fichier CustomGenesis.json, et remplacez le champ *ADDRESS* par l'adresse que vous venez de générer :
+
+**2. Configuration**  
+On va maintenant allouer une certaine somme d'Ether à cet utilisateur que nous venons de créer : *1000000000000000000000* (bien sûr ceci n'est possible que dans le cas d'une blockchain privée...).
+Pour cela ouvrez le fichier `genesis.json`, et remplacez le champ *ADDRESS* par l'adresse que vous venez de générer :
 
 ```console
   "alloc": {
@@ -17,58 +31,58 @@
   }
 ```
 
-https://medium.com/taipei-ethereum-meetup/beginners-guide-to-ethereum-3-explain-the-genesis-file-and-use-it-to-customize-your-blockchain-552eb6265145 : infos sur contenu genesis
+Le *genesis block* (https://bitcoin.fr/bloc-genesis/) correspond au tout premier bloc d'une blockchain qui permet d'instancier la blockchain et de créer un premier lien à partir duquel pourra se construire l'ensemble de la chaine. Dans le cas réel, ce bloc hardcodé contient  des données arbitraires, généralement une certaine somme d'argent à laquelle il sera impossible d'accéder par la suite.
 
-// explication contenu + ce que bloc de génèse
+Dans notre cas ce genesis block est créé grâce au fichier `genesis.json` qui correspond en quelque sorte à sa configuration. Celui ci comprend différents champs, notamment le champ *config* qui permet de définir certains paramètres de la blockchain tels que son ID. D'autres champs importants pour nous sont :
 
-<<<<<<< HEAD
-**3** Lancement : `init.sh` + `run.sh` +vérifier user bien créé : `eth.accounts` + vérifier solde : eth.getBalance(eth.accounts[0])
+- *alloc* qui permet d'allouer un certain nombre d'ethers à une adresse donnée;
 
-**4** Créer second compte `personal.newAccount()` avec mdp  de votre choix + vérifier fonctionnement avec `eth.accounts` mais également le solde de ce second user, que vaut il ?
-=======
-**3** Lancement : `./peer1/init.sh` + `./peer1/run.sh` +vérifier user bien créé : `eth.accounts` + vérifier solde : `eth.getBalance(eth.accounts[0])`
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
+- la difficulté qui correspond à la complexité nécessaire à  la résolution du "puzzle" permettant de miner le hash d'un bloc donné ; dans notre cas afin que le minage soit très rapide (automatique), cette valeur est définie à 0. Dans un cas réel, afin que celui ci soit maintenu à une vitesse constante, cette difficulté évolue en fonction du nombre de mineurs et de la puissance de calcul de la blockchain;
 
-**4** Créer second compte `personal.newAccount()` avec mdp  de votre choix + vérifier fonctionnement avec `eth.accounts` mais également le solde de ce second user, que vaut il ?
+- le timestamp, moment d'émission du bloc.
 
 
-**6** Miner block
+**3. Lancement**  
+Maintenant que nous avons créé un utilisateur et modifié le fichier de configuration, nous allons accéder à la blockchain.
+Pour ceci il va falloir dans un premier temps lancer le script `./peer1/init.sh` qui va permettre d'initier la blockchain avec la configuration que nous venons de définir. Maintenant que ceci est réalisé, nous allons pouvoir accéder à la blockchain. Pour ceci il va falloir lancer le script `./peer1/run.sh`.
 
-Cas réel, minage long : explication mais ici comme visible dans genesis, difficulté mis à zéro => minage instantanné
+Nous voici maintenant dans la blockchain, à ce stade, on peut vérifier deux choses :
+
+- que l'utilisateur que nous avons créé est bien dans la blockchain avec la commande `eth.accounts` qui liste l'ensemble des utilisateurs
+
+- que la somme demandée a bien été créditée sur le compte de l'utilisateur avec la commande `eth.getBalance(eth.accounts[0])`
 
 
- `loadScript("./js_scripts/mineWhenNeeded.js")`
+**4. Création de deux autres utilisateurs**  
+Nous allons maintenant créer deux nouveaux utilisateurs. Le premier de ces deux utilisateurs va nous permettre de découvrir le fonctionnement des transactions. Pour ce qui est du second, nous allons par la suite le définir comme *mineur* afin d'observer la rétribution de ceux-ci lors du minage de blocs.
 
-Par défaut, gain minage envoyés à eth0, pas ce qu'on veut ici donc définit add du miner=>
+- a. Créz deux nouveaux utilisateurs, en répétant deux fois la commande `personal.newAccount()`, il vous sera demandé de définir un mot de passe pour ces utilisateurs. Afin de nous simplifier la vie, nous pouvons définir ce mot de passe comme étant une chaine de caractères vide *""*, pour cela il vous suffit de presser la touche [Entrée].
 
-troisième user: `personal.newAccount("")` (mdp ="") :  
+- b. maintenant que ces deux comptes sont créés, grâce aux commandes utilisées dans la question **3**, vérifiez que la création de ces deux comptes est effective et regardez le solde de ces deux nouveaux utilisateurs. Que vaut il ?  
 
-`miner.setEtherbase("<ad du troisième user>")`;
 
-Vérifier balance à 0, vérfier que bien ad miner : `eth.coinbase`
+**5. Lancement d'un mineur**   
+Maintenant que ces deux utilisateurs sont créés, nous allons définir dans notre blockchain un compte mineur qui recevra l'argent perçu par le noeud pour le minage des blocs.
 
-<<<<<<< HEAD
-par défaut, geth mine blocks même si pas de transactions, pour miner un sul bloc loadScript("mineWhenNeeded.js")
-=======
-par défaut, geth mine blocks même si pas de transactions, pour miner un sul bloc `loadScript("./js_scripts/mineWhenNeeded.js")`
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
+Pour cela il va tout d'abord falloir indiquer au système quelle est l'adresse du noeud mineur, pour ce faire, utilisez la commande `miner.setEtherbase("<ad du troisième user>")`. Vous pouvez vérifier que l'opération a fonctionné en utilisant la commande `eth.coinbase`.
+
+Maintenant que ceci est réalisé, nous allons pouvoir lancer le minage. Normalement, en utilisant une blockchain privée avec ethereum, le minage est réalisé de façon continue, que des transactions soient en attente ou pas. Afin de ne miner que les blocs nécessaires, nous allons lancer le script  `loadScript("./js_scripts/mineWhenNeeded.js")` qui vérifie que des transactions sont bien en attente avant de lancer le minage.
+
+Vous pourrez constater qu'au premier lancement de ce script et donc au premier *minage* la ligne *Generating DAG in progress* s'affiche à de nombreuses reprises (environ une minute). Comme expliqué ici (https://github.com/ethereum/wiki/wiki/Ethash-DAG), ceci est dû au fait que pour que le système (consensus) de PoW (Proof of Work) fonctionne il est nécessaire qu'un nouveau client génère une certaine quantité de *travail*.
+
+**6. Une première transaction**  
+Maintenant que l'environnement de travail est prêt (instanciation des comptes, lancement du minage) nous allons pouvoir effectuer une première transaction. Avant tout, nous allons observer le nombre de blocs actuellement présents dans la chaine grâce à la commande `eth.blockNumber`. On peut également observer le contenu de ce bloc, et retrouver les champs provenant du fichier `genesis.json` grâce à la commande `eth.getBlock(<numero_de_bloc>)`.
+
+Une fois ceci réalisé, on peut réaliser une premier transaction grâce à la commande `eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[1], value:5000000000})` qui contient trois infomations : l'émetteur (premier utilisateur créé), le récepteur (second utilisateur créé) ainsi que la valeur de la transaction. Afin que cette commande soit possible, il sera très certainement nécessaire d'indiquer mot de passe de l'émetteur, ce qui permettra de l'authentifier et de rendre possible la transaction : `personal.unlockAccount(eth.accounts[0], "pa55w0rd123")`. Ceci montre que sans la clé privée d'un utilisateur, il sera impossible d'interagir avec la blockchain en utilisant simplement son adresse.
+
+Note pour vérifier infos de la transaction en utilisant le *fullhash* généré : ` eth.getTransaction(<fullhash>)`, on peut également voir que cette transaction apparait maintenant dans le bloc en attente de minage : `eth.getBlock("pending")`
 
 Vérifir que nouveau bloc : eth.getBlock(1) + voir infos du bloc, montrer que pointe bien surr celui d'avant
 
+Expliquer gas price !!
+
 
 Regarder block minés + vérifier comptes des users et du miner !
-<<<<<<< HEAD
-
-Expliquer gas price !!
-=======
-
-Expliquer gas price !!
-
-Premiere fois generating DAG environ 1 minute !
-
-**5** Transaction d'un user à un autre : `eth.sendTransaction({from:eth.accounts[0], to:eth.accounts[2], value:50000})`, nécessaire indiquer password (contenu dans fichier ethereum_pwd.txt)  du sender, sinon pas possible de réaliser transaction : `personal.unlockAccount(eth.accounts[0], "pa55w0rd123")`
-
-Note pour vérifier infos de la transaction en utilisant le *fullhash* généré : ` eth.getTransaction(<fullhash>)`, on peut également voir que cette transaction apparait maintenant dans le bloc en attente de minage : `eth.getBlock("pending")`
 
 
 **7** Ajout d'un second pair/noeud :
@@ -80,7 +94,6 @@ Dans second terminer aller dans dossier peer_2 et :
 Lancer `./peer2/init.sh`, principale différence : nouveau dossier de stockage des données mais même fichiers d'init pour que même bloc de CustomGenesis
 
 Lancer  `./peer2/run.sh`, différence, toujours dossier + port exposé
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 Dans terminal 2 : taper `admin.nodeInfo` pour récuprer les infos concernant le noeud, recopier la valeur de l'enode (ID du noeud) et dans le terminal 1 lancer la commande `admin.addPeer(<ENODE 2>)`, vérifier le fonctionnement avec la commande admin.peers, le pair devrait maintenant s'afficher, ie maintenant réseau local Blockchain
 Maintenant afficher numéro block courant dans T2 (eth.blockNumber) et lancer nouvelle transaction dans noeud 1 pour que minage soit réalisé, après quelques secondes, peut constater affichage  Imported new chain segment, peut afficher à nouveau le numéro de bloc ++ explication !
@@ -92,21 +105,14 @@ On va maintenant essayer de mettre en place un smart afin d'en comprendre le fon
 
 Avec Ethereum ceci est possible grâce à Solidity, un langage haut niveau conçu pour l'implémentation de contrats
 
-<<<<<<< HEAD
-Ouvrir fichier tirelire
-=======
 Ouvrir fichier tirelire dans smart_contract
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 Contrat à compiler `tirelire.sol`, tirelire géante dans laquelle tous les users peuvent mettre de l'argent, smart contract = fonctions + paramtres comme on va le voir dans cette partie
 
 première étape :  compilation et génération de diférents fichiers : bin (contract compilé, ce qui va être placé dans la blockcahin), abi : Application Binary Interface, façon d'interagir avec le contenu hexxadécimal de dans un format lisible par un être humain `tirelire.bin`
 
 Grâce aux lignes suivantes, après avoir lancé `solc --abi --bin tirelire.sol` dans un autre terminal dans la console geth on va pouvoir instancier le contrat :
-<<<<<<< HEAD
-=======
 
 Note : si vous utilisez Debian, solc n'est pas installé, une solution pour pouvoir tout de même l'utiliser est de passer par `https://remix.ethereum.org/` après être accédé à cette page dans un navigateur, collez le code du fichier `tirelire.sol` à la place du code présent sur l'interface. Cliquez ensuite sur *Start to compile* une fois que c'est réalisé, cliquez une *Details*, il va maintenant vous être possible de récupérer l'ABI et le code bin. Note, ce qui nous intéresse dans le code bin est uniquement le champ `object`, veuillez à ne pas copier l'ensemble de l'objet!
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 ```console
 
@@ -124,19 +130,9 @@ tirelireInterface = eth.contract(tirelireAbi)
 
 //On débloque l'utilisateur
 
-<<<<<<< HEAD
->personal.unlockAccount(eth.accounts[0], "pa55w0rd123")
-
-// On publie le smart contract
-
->var tirelireTx = tirelireInterface.new({from: eth.accounts[0],data: tirelireBin,gas: 1000000})
-
-// On récupère le hash
-=======
 personal.unlockAccount(eth.accounts[0], "pa55w0rd123")
 
 // On publie le smart contract
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 var tirelireTx = tirelireInterface.new({from: eth.accounts[0],data: tirelireBin,gas: 1000000})
 
@@ -197,11 +193,7 @@ Nouvelle idée : fixer un seuil que l'ont veut atteindre pour cela modifier le c
 
 Pour cela on va tout d'abord définir une nouvelle valeur,  ajouter une nouvelle ligne : `uint public objectif;` et l'instancier à 100000000000000000 dans le constructeur mais également ajouter une nouvelle ligne dans la fonction retirer : `assert(this.balance >= objectif)` si l'argent disponible dans l'épargne n'est pas suffisant...PAs de retrait possible
 
-<<<<<<< HEAD
-Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
-=======
 Ceci montre que si les termes d'un accord (quel qu'il soit) ne sont pas remplis, il ne pourra pas se dérouler. De plus la valeur objectif est impossible à modifier une fois instanciée et est fixée poour toujours, pour le modifier il faudrait modifier le code et donc instancier un nouveau contrat avec une nouvelle adresse sans rapport avec celui ci...les ether stockés ici seront donc perdus !
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
 
 
 Suite 2 :
@@ -216,8 +208,5 @@ Pour cette raison on va mettre en place un peu de sécurité, seul l'émétteur 
 
 Sécurité très imp pour prévenir les accès
 !!!
-<<<<<<< HEAD
-=======
 
 Nombreux autres types d'applis possibles, comme déjà dit, notamment propriété ou notariat, exemple : https://github.com/toluhi/property-developer
->>>>>>> e444c031a3814e9869630c03fd2830f95ee226d0
