@@ -107,17 +107,19 @@ Pour cette compilation, deux solutions s'offrent à vous :
 - si vous êtes sous Ubuntu, utilisez (dans un troisième terminal !) la commande `solc --abi --bin tirelire.sol`;
 - si vous êtes sous Debian, le compilateur Solidity n'est pas installé sur votre machine eet par conséquent il va vous être nécessaire d'utiliser votre navigateur Web pour accéder à la page `https://chriseth.github.io/browser-solidity/#version=soljson-latest.js`, il s'agit d'un compilateur en ligne temps réel de solidity. Après être accédé à cette page dans un navigateur, collez le contenu du fichier `tirelire.sol` à la place du code présent sur l'interface. Celui ci devait être automatique compilé et il va maintenant vous être possible de récupérer l'ABI et le code bin générées sous les noms de variables `Bytecode` et `Interface`.
 
+Note : si vous utilisez la dernière version du compilateur, il se pourrait que celle ci ne fonctionne pas. Aussi nous vous conseillons de modifier les paramètres de configuration pour utiliser une version fonctionnelle du compilateur telle que : *0.4.24+commit.e67f0147*.
+
 Une fois ces deux fichiers générés, on va pouvooir passer au déploiement du contrat grâce aux lignes de commandes suivantes (dans le terminal du noeud 1 !) :
 
 ```console
 
 // Stockage du fichier bin, penser à ajouter 0x pour que celui ci soit bien interprété comme du contenu hexadécimal et à mettre des guillements autour !
 
-tirelireBin = '0x' + "[<BIN provenant du terminal 2 !>]"
+tirelireBin = '0x' + "<BIN provenant du compilateur solidity!>"
 
 // Simple stockage de l'ABI dans une variable (format JSON)
 
-tirelireAbi = [<abi provenant du terminal 2 !>]
+tirelireAbi = <abi provenant du compilateur solidity>
 
 // Signifie à Geth que cette variable est un ABI : tranformer en ABI le JSON
 
@@ -154,10 +156,11 @@ Pour tester le fonctionnement de ce smart contract sur le second noeud on va avo
 - récupérer l'adresse du contrat.
 
 ```console
-tirelireAbi = [<abi provenant du terminal 2 !>]
+tirelireAbi = <abi provenant du terminal 2 !>
 tirelireInterface = eth.contract(tirelireAbi)
-tirelireTx.at(<adresse du smart contract>).hello()
+tirelireInterface.at(<adresse du smart contract>).hello()
 ```
+Note : Vous pouvez récupérer l'adresse du smart contract à l'aide de la commande `tirelireTx.address`.
 
 Comme on peut le constater, un contrat est défini par deux choses : sont abi (liste d’interactions possibles) et son adresse et avec cela il est possible d'y accéder depuis n'importe quel endroit dans le réseau.
 
@@ -218,3 +221,5 @@ Si vous avez finies les parties précédentes qui correspondent à une rapide in
 - Mise en pratique d'autres applications de Smart contract et plus particulièrement d'une gestion d'un processus d'élection transparent et sécurisé grâce au tutoriel suivant : https://solidity.readthedocs.io/en/latest/solidity-by-example.html?fbclid=IwAR1TvfUhoadmSGrg0DECsDZvsyJa3rOcxfsJLObJV0SCryiETg3fxpsD1gg#possible-improvements. Pour cela, vous aurez simplement à copier le code présent sur cette page, à le compiler et à le mettre en place sur la blockchain comme dans la partie précédente.
 
 - Interconnexion de multiples machines pour étendre les capacités de votre réseau, pour ceci vous aurez besoin de différentes idées déjà abordées dans ce TP : utilisation d'un même fichier de génèse au moment de l'*init* et ajout de pair par l'administrateur `admin.addPeer("enode://address@ip:port")`, où *ip* et *port* correspondent aux informations provenant de la machine que l'on cherche à connecter.
+
+- Un autre aspect intéressant pourrait être la protection de ressources sensibles grâce au hashage. Une bonne introduction à ceci est fournit ici : https://medium.com/talo-protocol/how-to-secure-sensitive-data-on-an-ethereum-smart-contract-77f21c2b49f5.
