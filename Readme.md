@@ -113,7 +113,8 @@ Une fois ces deux fichiers générés, on va pouvooir passer au déploiement du 
 
 ```console
 
-// Stockage du fichier bin, penser à ajouter 0x pour que celui ci soit bien interprété comme du contenu hexadécimal et à mettre des guillements autour !
+// Stockage du fichier bin, penser à ajouter 0x pour que celui ci soit bien interprété
+// comme du contenu hexadécimal et à mettre des guillements autour !
 
 tirelireBin = '0x' + "<BIN provenant du compilateur solidity!>"
 
