@@ -223,17 +223,15 @@ Par exemple, à 10:55:20 le routeur R1 reçoit {rule:"test",params:"parameters",
 
 A noter que chacun des routeurs reçoit des mises à jours qui lui sont propres. C'est à dire que les mises à jours des différents routeurs sont indépendantes.
 
-Pour assurer la sécurité du système, il serait important de vérifier que les règles actuellement déployées par ces routeurs correspondent bien aux règles qui leur ont été envoyées. En effet, un routeur malicieux, ou sous le contrôle d'une entité malveillante, pourrait chercher à modifier ces règles,perturbant ainsi le bon fonctionnement de la distribution des informations.
+Pour assurer la sécurité du système, il serait important de vérifier que les règles actuellement déployées par ces routeurs correspondent bien aux règles qui leur ont été envoyées. En effet, un routeur malicieux, ou sous le contrôle d'une entité malveillante, pourrait chercher à modifier ces règles, perturbant ainsi le bon fonctionnement de la distribution des informations.
 
-L'objectif de cette partie est de concevoir un mécanisme basé sur la blockchain (et des smarts contracts) permettant d'assurer la sécurité du système de communication. Pour cela des fonctions, par exemple de Mapping (https://coursetro.com/posts/code/102/Solidity-Mappings-&-Structs-Tutorial) pourront être utilisées
+L'objectif de cette partie est de concevoir un mécanisme basé sur la blockchain (et des smarts contracts) permettant d'assurer la sécurité du système de communication. Pour cela des fonctions, par exemple de Mapping (https://coursetro.com/posts/code/102/Solidity-Mappings-&-Structs-Tutorial) pourront être utilisées.
 
 Différents points devront être pris en compte:
 
-  1. Afin de maximiser les performances de la blockchain, il est important de minimiser la quantité de données stockées dans la blockchain, en hashant les données par exemple ou encore en rassemblant l'ensemble des règles. Toutefois, le système devra être en capacité de retrouver la règle non correspondante...
-  2. La génération d'un nouveau bloc dans la blockchain n'est pas automatique et peut prendre quelques secondes. Ainsi, la version des règles actuellement présente dans les routeurs et celle stockée dans la blockchain peuvent être différentes. Comment prendre en compte ces divergences ? Du versioning et l'utilisation du moment d'envoi des règles pourraient être utilisés dans cette solution.
+  1. Afin de maximiser les performances de la blockchain, il est important de minimiser la quantité de données stockées dans la blockchain, en hashant les données par exemple ou encore en rassemblant l'ensemble des règles en une seule (un seul hash pour l'ensemble). Toutefois, le système devra être en capacité de retrouver la règle non correspondante...
+  2. La génération d'un nouveau bloc dans la blockchain n'est pas automatique et peut prendre quelques secondes. Ainsi, la version des règles actuellement présente dans les routeurs et celle stockée dans la blockchain peuvent être différentes. Comment prendre en compte ces divergences ? La mise en place d'un système de versioning et l'utilisation du moment d'envoi des règles pourraient être utilisés dans cette solution.
   3. L'accès au smart contract/la modification des données contenues dans le smart contract devra être régulé pour éviter qu'une entité malveillante ne puisse perturber le fonctionnement du système
-
-
 
 (pour plus de détails, venir me demander)
 
