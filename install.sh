@@ -28,19 +28,19 @@ elif [[ $uname =~ "Debian" ]]; then
 
       sudo apt-get install build-essential
 
-      /usr/local/go/bin/go get -d github.com/ethereum/go-ethereum
-      /usr/local/go/bin/go install github.com/ethereum/go-ethereum/cmd/geth
+      #/usr/local/go/bin/go get -d github.com/ethereum/go-ethereum
+      #/usr/local/go/bin/go install github.com/ethereum/go-ethereum/cmd/geth
 
-#      cd ..
-#      sudo rm -r go_install
+      cd ..
+      sudo rm -r go_install
 
       # Then, geth needs to be installed
 
-#      git clone https://github.com/ethereum/go-ethereum.git
-#      cd go-ethereum
-#      make geth
-#      cp build/bin/geth ..
-#      cd ..
-#      sudo rm -r go-ethereum
+      git clone https://github.com/ethereum/go-ethereum.git
+      cd go-ethereum
+      make geth
+      cp build/bin/geth ..
+      cd ..
+      sudo rm -r go-ethereum
 
 fi
