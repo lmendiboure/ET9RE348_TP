@@ -52,6 +52,7 @@ Nous voici maintenant dans la blockchain, à ce stade, on peut vérifier deux ch
 
 - que la somme demandée a bien été créditée sur le compte de l'utilisateur avec la commande `eth.getBalance(eth.accounts[0])`
 
+Note : Si vous avez déjà lancé la commande *init* et que vous souhaitez la lancer une nouvelle fois, il vous faudra supprimer le dossier *.ethereum_example* situé dans le dossier *..*
 
 **4. Création de deux autres utilisateurs**  
 Nous allons maintenant créer deux nouveaux utilisateurs. Le premier de ces deux utilisateurs va nous permettre de découvrir le fonctionnement des transactions. Pour ce qui est du second, nous allons par la suite le définir comme *mineur* afin d'observer la rétribution de ceux-ci lors du minage de blocs.
