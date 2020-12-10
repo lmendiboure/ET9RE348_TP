@@ -32,11 +32,11 @@ elif [[ $uname =~ "Debian" ]]; then
       #/usr/local/go/bin/go install github.com/ethereum/go-ethereum/cmd/geth
 
       cd ..
-      sudo rm -r go_install
+      sudo rm -r go_install 
 
       # Then, geth needs to be installed
 
-      git clone https://github.com/ethereum/go-ethereum.git
+      git clone https://github.com/ethereum/go-ethereum.git --branch release/1.8
       cd go-ethereum
       make geth
       cp build/bin/geth ..
