@@ -12,11 +12,14 @@ Ici, nous allons utiliser un environnement de test, et par conséquent une block
 ### Premiers pas : Création d'un compte et premières transactions
 ______
 
-**1. Création d'un utilisateur**  
-Pour pouvoir intéragir avec Ethereum, l'utilisation d'un compte Ethereum est essentielle. Celui ci possède un solde (un nombre d'ethers, *ether balance*), permet l'envoi de transactions, qu'il s'agisse de transactions monétaires ou de smarts contracts et enfin est contrôlé par une clé privée qui permet de le sécuriser.
- Il va ici être facile d'en créer un en lançant le script `./peer1/create_account.sh`.
+Note : Les fichiers utilisés dans le cadre de ce tp se basent sur la commande *geth*. Il est possible que dans l'environnement qui vous a été fournie la commande geth ne soit pas directement accessible (le fichier binaire correspondant se trouve dans le dossier ~/ET9RE348_TP. Il pourra vous être nécessaire de créer un alias permettant d'utiliser directement cette commande (ou de modifier les scripts pour qu'ils utilisent directement le binaire...).
 
- Ceci en faisant appel à la commande *geth* va simplement demander la création d'un nouvel utilisateur ayant pour mot de passe le mot de passe stocké dans le fichier */peer1/ethereum_pwd.txt*. Une fois cet utilisateur créé une adresse va être générée, celle ci correspond à l'identifiant unique de notre utilisateur, stocké dans la blockchain et et qui permettra de l'authentifier lorsqu'il cherchera à intéragir avec la blockchain mais également d'identifier toutes les transactions qu'il aura réalisé (permettant par exemple de connaitre son solde à un moment donné).
+
+**1. Création d'un utilisateur**  
+
+Pour pouvoir intéragir avec Ethereum, l'utilisation d'un compte Ethereum est essentielle. Celui ci possède un solde (un nombre d'ethers, *ether balance*), permet l'envoi de transactions, qu'il s'agisse de transactions monétaires ou de smarts contracts et enfin est contrôlé par une clé privée qui permet de le sécuriser. Il va ici être facile d'en créer un en lançant le script `./peer1/create_account.sh`.
+
+Ceci en faisant appel à la commande *geth* va simplement demander la création d'un nouvel utilisateur ayant pour mot de passe le mot de passe stocké dans le fichier */peer1/ethereum_pwd.txt*. Une fois cet utilisateur créé une adresse va être générée, celle ci correspond à l'identifiant unique de notre utilisateur, stocké dans la blockchain et et qui permettra de l'authentifier lorsqu'il cherchera à intéragir avec la blockchain mais également d'identifier toutes les transactions qu'il aura réalisé (permettant par exemple de connaitre son solde à un moment donné).
 
 
 **2. Configuration**  
@@ -57,7 +60,7 @@ Note : Si vous avez déjà lancé la commande *init* et que vous souhaitez la la
 **4. Création de deux autres utilisateurs**  
 Nous allons maintenant créer deux nouveaux utilisateurs. Le premier de ces deux utilisateurs va nous permettre de découvrir le fonctionnement des transactions. Pour ce qui est du second, nous allons par la suite le définir comme *mineur* afin d'observer la rétribution de ceux-ci lors du minage de blocs.
 
-- a. Créz deux nouveaux utilisateurs, en répétant deux fois la commande `personal.newAccount()`, il vous sera demandé de définir un mot de passe pour ces utilisateurs. Afin de nous simplifier la vie, nous pouvons définir ce mot de passe comme étant une chaine de caractères vide *""*, pour cela il vous suffit de presser la touche [Entrée].
+- a. Créz deux nouveaux utilisateurs, en répétant deux fois la commande `personal.newAccount()`, il vous sera demandé de définir un mot de passe pour ces utilisateurs. 
 
 - b. maintenant que ces deux comptes sont créés, grâce aux commandes utilisées dans la question **3**, vérifiez que la création de ces deux comptes est effective et regardez le solde de ces deux nouveaux utilisateurs. Que vaut il ?  
 
