@@ -1,17 +1,6 @@
 #!/bin/bash
 
-uname=$(echo $(uname -a))
-if [[ $uname =~ "Ubuntu" ]]; then
-    # If Ubuntu is the distribution : Install using packet manager
 
-    sudo apt-get -y install software-properties-common
-    sudo add-apt-repository -y ppa:ethereum/ethereum
-    sudo apt-get update
-    sudo apt-get -y install ethereum-unstable
-    sudo apt-get -y install solc
-
-elif [[ $uname =~ "Debian" ]]; then
-      # If Debian is the distribution : Install from source
       # First of all, go needs to be installed
 
       sudo apt-get update
@@ -43,4 +32,3 @@ elif [[ $uname =~ "Debian" ]]; then
       cd ..
       sudo rm -r go-ethereum
 
-fi
