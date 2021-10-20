@@ -9,10 +9,11 @@ Pour ce qui est de l'installation de ces outils (Go, Geth et solc), celle ci pou
 
 Ici, nous allons utiliser un environnement de test, et par conséquent une blockchain privée dans laquelle nous pourrons créer des utilisateurs, attribuer des ethers, réaliser des transactions, développer et tester des smart contracts de façon gratuite et rapide.
 
-Note : A la fin de la scéance, pensez à m'envoyer un compte-rendu (court) répondant aux différentes questions présentes dans ce TP (leo.mendiboure@univ-eiffel.fr)
-Note : A condition que vous ayez installé/que vous installiez VirtualBox sur votre machine personnelle, il est tout à fait possible de réaliser ce TP sans se servir des machines de l'école.
+**Note :** A la fin de la scéance, pensez à m'envoyer un compte-rendu (court) répondant aux différentes questions présentes dans ce TP (leo.mendiboure@univ-eiffel.fr)
 
-Note : sur les machines de l'école pensez à entrer la commande mount mondzouk-server3:/media/images/Archives/Debian8-mirror /media/mirror
+**Note :** A condition que vous ayez installé/que vous installiez VirtualBox/VMware sur votre machine personnelle, il est tout à fait possible de réaliser ce TP sans se servir des machines de l'école.
+
+**Note :** sur les machines de l'école pensez à entrer la commande mount mondzouk-server3:/media/images/Archives/Debian8-mirror /media/mirror
 
 ### Premiers pas : Création d'un compte et premières transactions
 ______
