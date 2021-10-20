@@ -78,7 +78,7 @@ Le premier de ces deux utilisateurs va nous permettre de découvrir le fonctionn
 
 - b. maintenant que ces deux comptes sont créés, grâce aux commandes utilisées dans la question **3**, vérifiez que la création de ces deux comptes est effective et regardez le solde de ces deux nouveaux utilisateurs. 
 
-**Q.2** Qu'est ce qu'un mineur, quelle est son utilité dans la Blockchain ?
+**Q.2** Qu'est ce qu'un mineur ? Quelle est son utilité dans la Blockchain ? Quelle est la différence entre un pair et un mineur ?
 
 
 **5. Lancement d'un mineur**   
@@ -230,11 +230,9 @@ On va maintenant fixer une nouvelle valeur, qui va correspondre au but que l'on 
 
 Pour cela, toujours dans le même fichier, on va tout d'abord définir une nouvelle valeur : `objectif` que l'on va instancier à `100000000000000000` dans le constructeur. 
 
-Une fois ceci réaliser, on va ajouter une nouvelle ligne dans la fonction *retirer* qui devra signifier que si la somme présente dans notre épargne n'est pas supérieure égale à notre objectif, il sera impossible de retirer de l'argent. Pour ce faire, vous pourrez utiliser la fonction `assert` qui permet de vérifier si une assertion est vraie (ie similaire à un if)
+Une fois ceci réaliser, on va ajouter une nouvelle ligne dans la fonction *retirer* qui devra signifier que si la somme présente dans notre épargne n'est pas supérieure égale à notre objectif, il sera impossible de retirer de l'argent. Pour ce faire, vous pourrez utiliser la fonction `assert` qui permet de vérifier si une assertion est vraie (ie similaire à un if).
 
-: `assert(this.balance >= objectif)`. Ceci signifie que si la 
-
-**Q.8** Quelle est la ligne qui doit être ajoutée ?
+**Q.8** Quelle est la ligne qui doit être ajoutée ? (ie donnez la ligne de code)
 
 
 Après avoir à nouveau compilé et ajouté ce contrat à la blockchain, vérifiez que ce que l'on vient de mettre en place fonctionne :
@@ -257,18 +255,24 @@ Comme vous devriez pouvoir le constater, un smart contract est ouvert et quiconq
 
 Pour cette raison on va mettre en place un peu de sécurité, seul l'émetteur du smart contract sera en mesure de le modifier, pour cela on crée et instancie un nouvel élément `address owner` à `msg.sender` dans le constructeur, et on ajoute dans la fonction `retirer` l'assert permettant de vérifier que l'adresse correspond bien à l'adresse du créateur du smart contract.
 
+**Q.9** A quoi est égale la ligne qui doit être ajoutée ? (ie donnez la ligne de code)
+
 Une fois le contrat déployé, déposez à nouveau de l'argent dans notre tirelire : `tirelireTx.donner({from:eth.accounts[0], value:"100000000000000000"})` puis essayez d'y accéder avec un autre utilisateur, que constatez vous ?
 
 Cette partie visait à montrer une chose évidente, la sécurité est un point primordial et contrôler les droits d'accès à nos smart contracts est un point essentiel.
 
 
-### Pour aller plus loin
+### Petit complément
 ______
 
 Si vous avez finies les parties précédentes, nous vous proposons des améliorations possibles pour découvrir de nouvelles fonctionnalités de la blockchain :
 
-- Mise en pratique d'autres applications de Smart contract et plus particulièrement d'une gestion d'un processus d'élection transparent et sécurisé grâce au tutoriel suivant : https://solidity.readthedocs.io/en/latest/solidity-by-example.html?fbclid=IwAR1TvfUhoadmSGrg0DECsDZvsyJa3rOcxfsJLObJV0SCryiETg3fxpsD1gg#possible-improvements. Pour cela, vous aurez simplement à copier le code présent sur cette page, à le compiler et à le mettre en place sur la blockchain comme dans la partie précédente.
+- Mise en pratique d'autres applications de Smart contract https://solidity.readthedocs.io/en/latest/solidity-by-example.html?fbclid=IwAR1TvfUhoadmSGrg0DECsDZvsyJa3rOcxfsJLObJV0SCryiETg3fxpsD1gg#possible-improvements. Pour cela, vous aurez simplement à copier le code présent sur cette page, à le compiler et à le mettre en place sur la blockchain comme dans la partie précédente.
+
+**Q.10** Quel est l'objectif du premier programme solidity présenté sur cette page ? Pourquoi la Blockchain semble-t-elle intéressante dans ce contexte ?
 
 - Interconnexion de multiples machines pour étendre les capacités de votre réseau, pour ceci vous aurez besoin de différentes idées déjà abordées dans ce TP : utilisation d'un même fichier de génèse au moment de l'*init* et ajout de pair par l'administrateur `admin.addPeer("enode://address@ip:port")`, où *ip* et *port* correspondent aux informations provenant de la machine que l'on cherche à connecter.
+
+**Q.11** Donnez la procédure permettant d'interconnecter deux machines virtuelles sur lesquelles seraient lancés des pairs Ethereum.
 
 - Un autre aspect intéressant pourrait être la protection de ressources sensibles grâce au hashage. Une bonne introduction à ceci est fournit ici : https://medium.com/talo-protocol/how-to-secure-sensitive-data-on-an-ethereum-smart-contract-77f21c2b49f5.
