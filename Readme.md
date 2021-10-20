@@ -15,6 +15,10 @@ Ici, nous allons utiliser un environnement de test, et par conséquent une block
 
 **Note :** sur les machines de l'école pensez à entrer la commande mount mondzouk-server3:/media/images/Archives/Debian8-mirror /media/mirror
 
+**Lien vers la VM :** https://drive.google.com/file/d/1egsKuYzztWuAeKsnODdwV20cSzSTQKvS/view?usp=sharing
+
+Identifiants de la VM : user : expe ; mdp : expe2021
+
 ### Premiers pas : Création d'un compte et premières transactions
 ______
 
