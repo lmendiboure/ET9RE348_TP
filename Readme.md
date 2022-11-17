@@ -19,6 +19,15 @@ Ici, nous allons utiliser un environnement de test, et par conséquent une block
 
 Identifiants de la VM : user : expe ; mdp : expe2021
 
+### Retour sur l'introduction
+______
+
+**Q-I1** Qu'est ce que la Blockchain ? Qu'est ce qu'un transaction ?
+
+**Q-I2** Donnez trois exemples d'applications potentielles de la Blockchain.
+
+**Q-I3** Qu'est ce que la Preuve de Travail ? Expliquez brièvement son fonctionnement.
+
 ### Premiers pas : Création d'un compte et premières transactions
 ______
 
